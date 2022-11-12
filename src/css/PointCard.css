@@ -1,0 +1,112 @@
+.pointCard {
+    border: 2px solid rgb(17, 131, 131);
+    background-color:aliceblue;
+    min-width:540px;
+    height:364px;
+    border-radius:10px;
+}
+
+.pointCardTitle{
+    border-bottom: 1px solid;
+    padding-top:4px;
+    width: 100%;
+    height:54px;
+    display: inline-block;
+    border-radius:10px 10px 0 0;
+    background-color:rgb(193, 250, 250);
+}
+
+.pointCardTitleImage{
+    padding: 6px 6px 6px 6px;
+    margin-left:2px;
+    margin-bottom:2px;
+    width: 48px;
+    height:48px;
+    display: inline-block;
+    border-radius:25px;
+    border:2px solid rgb(17, 131, 131);
+    background-color:rgb(8, 63, 63);
+}
+
+.pointCardTitleText{
+    width: 70%;
+    height:40px;
+    font-size:20px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.pointCardTitleTime{
+    width: 19%;
+    height:40px;
+    font-size:24px;
+    display: inline-block;
+}
+
+.pointCardTitleTimeIcon{
+    margin-right:4px;
+}
+
+.pointCardContent{
+    width: 100%;
+    height:260px;
+    position:relative;
+}
+
+.pointCardContentVideo{
+    top: 10px;
+    left:10px;
+    position:absolute;
+    width: 50%;
+    display: inline-block;
+    height:50%;
+}
+
+.pointCardContentRightSide {
+    left:60%;
+    position:absolute;
+    width: 40%;
+    display: inline-block;
+    border-left: 1px solid;
+    padding-left:4px;
+    height:100%;
+}
+
+.pointCardContentMap{
+    display: inline-block;
+    height:60%;
+}
+
+.pointCardContentText{
+    font-size:20px;
+    height:40%;
+}
+
+.pointCardFooter{
+    border-top:1px solid;
+    width: 100%;
+    display: inline-block;
+}
+
+.pointCardFooterLevel{
+    width: 40%;
+    font-size:28px;
+    display: inline-block;
+}
+
+.pointCardFooterButton{
+    width: 20%;
+    display: inline-block;
+    position: relative;
+}
+
+.pointCardFooterDetail{
+    position: absolute;
+    top:-18px;
+    right: 0;
+    bottom: 0;
+    left: 0;  
+    width: 80%;
+    height: 40px;
+    margin: auto;
+}

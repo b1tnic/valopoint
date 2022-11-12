@@ -1,0 +1,17 @@
+.homePagePointCard{
+    margin-top:30px;
+}
+
+.homePageSearchComponent{
+    margin-bottom:6px;
+}
+
+
+.homePageSearchButton{
+    width:100%;
+    height:38px;
+}
+
+.homePagePointCardSection{
+    background-color:rgb(241, 249, 250)
+}

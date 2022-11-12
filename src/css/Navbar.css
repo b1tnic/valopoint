@@ -1,0 +1,17 @@
+.navbarDefault{
+      height: 100px;
+      background-color:aliceblue;
+    }
+
+.navbarCollapse{
+    background-color:aliceblue;
+    width:100%;
+}
+
+.navbarBrand{
+    font-size:28px !important;
+}
+
+.navbarIcon {
+    margin-right:4px;
+}
