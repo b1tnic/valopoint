@@ -1,3 +1,4 @@
+import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Button from "react-bootstrap/Button";
@@ -7,31 +8,41 @@ import { Postcard, Person } from "react-bootstrap-icons";
 const NavbarDefault = () => {
   return (
     <>
-      <Navbar className="navbarDefault" expand="lg">
-        <Navbar.Brand href="/" className="navbarBrand">
-          ValoPoint
-        </Navbar.Brand>
-        <Nav className="mr-auto">
-          <Nav.Link className="navbarLink" href="/posts">
-            <Postcard
-              className="navbarIcon"
-              color="royalblue"
-              size={24}
-            ></Postcard>
-            記事一覧
-          </Nav.Link>
-          <Nav.Link className="navbarLink" href="/suspects">
-            <Person className="navbarIcon" color="royalblue" size={24}></Person>
-            このサイトについて
-          </Nav.Link>
-        </Nav>
-        <Button
-          className="navbarPostButton"
-          variant="outline-success"
-          href="/create"
-        >
-          投稿！
-        </Button>
+      <Navbar bg="light" className="navbarDefault" expand="lg">
+        <Container>
+          <Navbar.Brand href="/" className="navbarBrand">
+            ValoPoint
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link className="navbarLink" href="/posts">
+                アセント
+              </Nav.Link>
+              <Nav.Link className="navbarLink" href="/posts">
+                バインド
+              </Nav.Link>
+              <Nav.Link className="navbarLink" href="/posts">
+                ヘイブン
+              </Nav.Link>
+              <Nav.Link className="navbarLink" href="/posts">
+                スプリット
+              </Nav.Link>
+              <Nav.Link className="navbarLink" href="/posts">
+                アイスボックス
+              </Nav.Link>
+              <Nav.Link className="navbarLink" href="/posts">
+                ブリーズ
+              </Nav.Link>
+              <Nav.Link className="navbarLink" href="/posts">
+                フラクチャー
+              </Nav.Link>
+              <Nav.Link className="navbarLink" href="/posts">
+                パール
+              </Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
       </Navbar>
     </>
   );
