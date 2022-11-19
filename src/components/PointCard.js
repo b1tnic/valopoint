@@ -20,7 +20,7 @@ const PointCard = (props) => {
         </div>
         <div className="pointCardFooter">
           <div className="pointCardFooterButton">
-            <Button className="pointCardFooterDetail" href={"/"}>
+            <Button className="pointCardFooterDetail" href={"/Detail/"}>
               詳しく見る！
             </Button>
           </div>

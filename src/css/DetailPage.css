@@ -1,0 +1,19 @@
+.detailPageTitleBox{
+    border-bottom: 1px solid #000000fa;
+    margin-bottom: 4px;
+}
+
+.detailPageTitle{
+    font-size:36px;
+    margin-bottom:4px;
+}
+
+.detailPageExplainBox{
+    border: 1px solid #000000fa;
+    margin-top:400px;
+}
+
+.detailPageExplain{
+    font-size:24px;
+    margin-bottom:4px;
+}
