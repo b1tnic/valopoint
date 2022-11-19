@@ -21,6 +21,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import "../css/HomePage.css";
 import { Maps, Characters, IconOption } from "../static/options";
+import { Rainbow } from "react-bootstrap-icons";
 
 const Home = () => {
   const [articles, setArticles] = useState([]);
@@ -164,27 +165,38 @@ const Home = () => {
             </Row>
           </Col>
         </Row>
-        <Row className="homePagePointCardSection">
-          <Col
-            className="homePagePointCard"
-            xl={{ span: 4, offset: 1 }}
-            xs={{ span: 8, offset: 2 }}
-          >
-            <PointCard></PointCard>
-          </Col>
-          <Col
-            className="homePagePointCard"
-            xl={{ span: 4, offset: 1 }}
-            xs={{ span: 8, offset: 2 }}
-          >
-            <PointCard></PointCard>
-          </Col>
-          <Col
-            className="homePagePointCard"
-            xl={{ span: 4, offset: 1 }}
-            xs={{ span: 8, offset: 2 }}
-          >
-            <PointCard></PointCard>
+        <Row className="homePagePointCardSectionBackground">
+          <Col xl={{ span: 10, offset: 1 }} xs={{ span: 10, offset: 1 }}>
+            <Row>
+              <Col xl={{ span: 10, offset: 1 }} xs={{ span: 12, offset: 0 }}>
+                <Row className="homePagePointCardSection">
+                  <Col
+                    className="homePagePointCard"
+                    style={{ paddingLeft: 3, paddingRight: 3 }}
+                    xl={{ span: 6, offset: 0 }}
+                    xs={{ span: 12, offset: 0 }}
+                  >
+                    <PointCard></PointCard>
+                  </Col>
+                  <Col
+                    className="homePagePointCard"
+                    style={{ paddingLeft: 3, paddingRight: 3 }}
+                    xl={{ span: 6, offset: 0 }}
+                    xs={{ span: 12, offset: 0 }}
+                  >
+                    <PointCard></PointCard>
+                  </Col>
+                  <Col
+                    className="homePagePointCard"
+                    style={{ paddingLeft: 3, paddingRight: 3 }}
+                    xl={{ span: 6, offset: 0 }}
+                    xs={{ span: 12, offset: 0 }}
+                  >
+                    <PointCard></PointCard>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Container>

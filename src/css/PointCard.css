@@ -1,8 +1,8 @@
 .pointCard {
-    border: 2px solid rgb(17, 131, 131);
-    background-color:aliceblue;
-    min-width:540px;
-    height:364px;
+    border: 1px solid rgb(158, 158, 158);
+    background-color:#fffffffa;
+    min-width:500px;
+    height:394px;
     border-radius:10px;
 }
 
@@ -49,55 +49,62 @@
 
 .pointCardContent{
     width: 100%;
-    height:260px;
+    height:340px;
     position:relative;
 }
-
-.pointCardContentVideo{
-    top: 10px;
-    left:10px;
-    position:absolute;
-    width: 50%;
-    display: inline-block;
-    height:50%;
-}
-
 .pointCardContentRightSide {
-    left:60%;
+    left:18%;
     position:absolute;
-    width: 40%;
+    width: 82%;
     display: inline-block;
     border-left: 1px solid;
     padding-left:4px;
     height:100%;
 }
 
-.pointCardContentMap{
-    display: inline-block;
-    height:60%;
+.pointCardContentText{
+    font-size:28px;
+    height:13%;
+    border-bottom: dotted 1px rgb(0, 0, 0);
 }
 
-.pointCardContentText{
-    font-size:20px;
-    height:40%;
+.pointCardContentMap{
+    display: inline-block;
+    height:87%;
 }
 
 .pointCardFooter{
     border-top:1px solid;
+    height:56px;
     width: 100%;
     display: inline-block;
 }
 
-.pointCardFooterLevel{
-    width: 40%;
+.pointCardFooterButton{
+    width: 76%;
+    top: 2px;
+    display: inline-block;
+    position: relative;
+}
+
+.pointCardFooterYoutube{
+    width: 9%;
+    display: inline-block;
+    position: relative;
+    top: -2px;
+}
+
+.pointCardFooterClock{
+    width: 5%;
     font-size:28px;
     display: inline-block;
 }
 
-.pointCardFooterButton{
-    width: 20%;
+.pointCardFooterClockText{
+    width: 6%;
+    padding-top:2px;
+    font-size:24px;
     display: inline-block;
-    position: relative;
 }
 
 .pointCardFooterDetail{
@@ -106,7 +113,8 @@
     right: 0;
     bottom: 0;
     left: 0;  
-    width: 80%;
+    width: 90%;
     height: 40px;
     margin: auto;
+    border-radius: 20px !important;
 }
