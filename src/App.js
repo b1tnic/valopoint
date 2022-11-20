@@ -1,6 +1,7 @@
 import "./App.css";
 import Home from "./Page/Home";
 import Detail from "./Page/Detail";
+import Map from "./Page/Map";
 import Navbar from "./Page/Navbar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -13,6 +14,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/Detail/:id" element={<Detail />} />
+            <Route path="/Map/:id" element={<Map />} />
           </Routes>
         </Router>
       </div>

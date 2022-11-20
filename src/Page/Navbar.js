@@ -16,28 +16,28 @@ const NavbarDefault = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link className="navbarLink" href="/posts">
+              <Nav.Link className="navbarLink" href="/Map/Ascent">
                 アセント
               </Nav.Link>
-              <Nav.Link className="navbarLink" href="/posts">
+              <Nav.Link className="navbarLink" href="/Map/Bind">
                 バインド
               </Nav.Link>
-              <Nav.Link className="navbarLink" href="/posts">
+              <Nav.Link className="navbarLink" href="/Map/Haven">
                 ヘイブン
               </Nav.Link>
-              <Nav.Link className="navbarLink" href="/posts">
+              <Nav.Link className="navbarLink" href="/Map/Split">
                 スプリット
               </Nav.Link>
-              <Nav.Link className="navbarLink" href="/posts">
+              <Nav.Link className="navbarLink" href="/Map/Icebox">
                 アイスボックス
               </Nav.Link>
-              <Nav.Link className="navbarLink" href="/posts">
+              <Nav.Link className="navbarLink" href="/Map/Breeze">
                 ブリーズ
               </Nav.Link>
-              <Nav.Link className="navbarLink" href="/posts">
+              <Nav.Link className="navbarLink" href="/Map/Fracture">
                 フラクチャー
               </Nav.Link>
-              <Nav.Link className="navbarLink" href="/posts">
+              <Nav.Link className="navbarLink" href="/Map/Pearl">
                 パール
               </Nav.Link>
             </Nav>
