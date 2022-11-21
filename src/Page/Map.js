@@ -1,5 +1,6 @@
 import PointCard from "../components/PointCard";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { db } from "../firebase-config";
 import {
   collection,
@@ -15,31 +16,49 @@ import {
 } from "firebase/firestore";
 import Button from "react-bootstrap/Button";
 import Select from "react-select";
-import BootstrapSwitchButton from "bootstrap-switch-button-react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import "../css/MapPage.css";
-import { Maps, Characters, IconOption } from "../static/options";
-import backgroundImage from "../static/images/icons/ascent.jpg";
+import { Characters, IconOption } from "../static/options";
 
 const Map = () => {
+  const { mapParam } = useParams();
   const [articles, setArticles] = useState([]);
   const [lastArticle, setLastArticle] = useState([]);
   const [map, setMap] = useState("");
   const [character, setCharacter] = useState("");
+  const [characterSelected, setCharacterSelected] = useState(false);
+  const [selectedCharacterAbility, setSelectedCharacterAbility] = useState([]);
+  const [clickedCharacterAbilityNumber, setClickedCharacterAbilityNumber] =
+    useState();
+  const [ifClickedCharacterAbility, setIfClickedCharacterAbility] =
+    useState(false);
+
+  let backgroundImage;
+  if (mapParam === "Ascent") {
+    backgroundImage = require("../static/images/maps/Ascent.jpg");
+  } else if (mapParam === "Bind") {
+    backgroundImage = require("../static/images/maps/Bind.jpg");
+  } else if (mapParam === "Haven") {
+    backgroundImage = require("../static/images/maps/Haven.jpg");
+  } else if (mapParam === "Split") {
+    backgroundImage = require("../static/images/maps/Split.jpg");
+  } else if (mapParam === "Icebox") {
+    backgroundImage = require("../static/images/maps/Icebox.jpg");
+  } else if (mapParam === "Breeze") {
+    backgroundImage = require("../static/images/maps/Breeze.jpg");
+  } else if (mapParam === "Fracture") {
+    backgroundImage = require("../static/images/maps/Fracture.jpg");
+  } else if (mapParam === "Pearl") {
+    backgroundImage = require("../static/images/maps/Pearl.jpg");
+  }
 
   const articlesCollectionRef = collection(db, "articles");
 
   // 検索関数searchingArticles
   const seatchingArticles = async () => {
     const searchingArticlesQuery = query(articlesCollectionRef);
-    if (map !== "") {
-      searchingArticlesQuery = query(
-        searchingArticlesQuery,
-        where("map", "==", map)
-      );
-    }
     if (character !== "") {
       searchingArticlesQuery = query(
         searchingArticlesQuery,
@@ -52,7 +71,6 @@ const Map = () => {
   const loadNextArticles = async () => {
     const nextArticlesQuery = query(
       articlesCollectionRef,
-      orderBy("popular", "desc"),
       startAfter(lastArticle),
       limit(10)
     );
@@ -67,7 +85,7 @@ const Map = () => {
     const getArticle = async () => {
       const q = query(
         articlesCollectionRef,
-        orderBy("popular", "desc"),
+        where("map", "==", mapParam),
         limit(10)
       );
       const articleDocs = await getDocs(q);
@@ -93,11 +111,47 @@ const Map = () => {
                   options={Characters}
                   components={{ Option: IconOption }}
                   placeholder="キャラを選択"
-                  onChange={(value) => {
-                    setCharacter(value);
+                  onChange={(character) => {
+                    setCharacter(character);
+                    setCharacterSelected(true);
+                    setSelectedCharacterAbility(character.ability);
                   }}
                 />
               </Col>
+              {characterSelected && (
+                <>
+                  {selectedCharacterAbility.map((ability, index) => {
+                    return (
+                      <div className="mapPageAbilityBox" key={ability}>
+                        <Col
+                          lg={{ span: 3, offset: 0 }}
+                          xs={{ span: 4, offset: 0 }}
+                        >
+                          <img
+                            src={require("../static/images/abilities/" +
+                              ability)}
+                            style={{ width: 128 }}
+                            alt={"Ability"}
+                            onClick={() => {
+                              clickedCharacterAbilityNumber === index
+                                ? setClickedCharacterAbilityNumber()
+                                : setClickedCharacterAbilityNumber(index);
+                              setIfClickedCharacterAbility(
+                                !ifClickedCharacterAbility
+                              );
+                            }}
+                            className={
+                              index === clickedCharacterAbilityNumber
+                                ? "mapPageAbilityIconClicked"
+                                : "mapPageAbilityIconNotClicked"
+                            }
+                          />
+                        </Col>
+                      </div>
+                    );
+                  })}
+                </>
+              )}
               <Col
                 className="mapPageSearchComponent"
                 lg={{ span: 8, offset: 2 }}

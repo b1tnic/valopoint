@@ -14,7 +14,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/Detail/:id" element={<Detail />} />
-            <Route path="/Map/:id" element={<Map />} />
+            <Route path="/Map/:mapParam" element={<Map />} />
           </Routes>
         </Router>
       </div>

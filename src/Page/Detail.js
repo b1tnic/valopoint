@@ -7,7 +7,7 @@ import "../css/DetailPage.css";
 const Detail = (props) => {
   return (
     <>
-      <Row>
+      <Row className="detailPageBackGround">
         <Col
           className="detailPageTitleBox"
           xl={{ span: 8, offset: 2 }}
