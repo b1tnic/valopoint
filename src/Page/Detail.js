@@ -15,7 +15,7 @@ const Detail = (props) => {
         >
           <p className="detailPageTitle">このリコンはテストです。</p>
         </Col>
-        <Col xl={{ span: 8, offset: 2 }} xs={{ span: 8, offset: 2 }}>
+        <Col xl={{ span: 4, offset: 4 }} xs={{ span: 8, offset: 2 }}>
           <YouTube
             videoId="ejIY4wfZhgg"
             className={style.iframe}

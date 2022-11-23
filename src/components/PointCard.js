@@ -7,6 +7,37 @@ const PointCard = (props) => {
     <>
       <div className="pointCard">
         <div className="pointCardContent">
+          <div className="pointCardContentLeftSide">
+            <div className="pointCardContentLeftSideTitle">
+              <p className="pointCardContentLeftSideTitleText">必見</p>
+            </div>
+            <div className="pointCardContentLeftSideImage0">
+              <img
+                src={require("../static/images/characters/" +
+                  "brimstone" +
+                  ".jpg")}
+                style={{ width: 80 }}
+                alt={"Character"}
+              ></img>
+            </div>
+            <div className="pointCardContentLeftSideImage1">
+              <img
+                src={require("../static/images/abilities/" +
+                  "brimstone/" +
+                  "Incendiary" +
+                  ".jpg")}
+                style={{ width: 80 }}
+                alt={"Character"}
+              ></img>
+            </div>
+            <div className="pointCardContentLeftSideImage2">
+              <img
+                src={require("../static/images/sides/" + "Defender" + ".jpg")}
+                style={{ width: 80 }}
+                alt={"Character"}
+              ></img>
+            </div>
+          </div>
           <div className="pointCardContentRightSide">
             <div className="pointCardContentText">
               <Pen color="royalblue" size={32} />
