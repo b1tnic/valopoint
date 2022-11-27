@@ -16,6 +16,74 @@
     height:38px;
 }
 
+.beginnerClicked{
+    width: 120px;
+    height:70px !important;
+    border-radius:100px !important;
+    border-color:#a1a1a1 !important;
+    background-color:#cbfac4 !important;
+    color: #000000 !important;
+}
+
+.notBeginnerClicked{
+    width: 120px;
+    height:50px !important;
+    border-color:#a1a1a1 !important;
+    background-color:#ffffff !important;
+    color: #000000 !important;
+}
+
+.intermediateClicked{
+    width: 120px;
+    height:70px !important;
+    border-radius:25px !important;
+    border-color:#a1a1a1 !important;
+    background-color:#fffbc1 !important;
+    color: #000000 !important;
+}
+
+.notIntermediateClicked{
+    width: 120px;
+    height:50px !important;
+    border-color:#a1a1a1 !important;
+    background-color:#ffffff !important;
+    color: #000000 !important;
+}
+
+.seniorClicked{
+    width: 120px;
+    height:70px !important;
+    border-radius:25px !important;
+    border-color:#a1a1a1 !important;
+    background-color:#ffdec4 !important;
+    color: #000000 !important;
+}
+
+.notSeniorClicked{
+    width: 120px;
+    height:50px !important;
+    border-color:#a1a1a1 !important;
+    background-color:#ffffff !important;
+    color: #000000 !important;
+}
+
+.otakuClicked{
+    width: 120px;
+    height:70px !important;
+    border-radius:25px !important;
+    border-color:#a1a1a1 !important;
+    background-color:#ffb9b9 !important;
+    color: #000000 !important;
+}
+
+.notOtakuClicked{
+    width: 120px;
+    height:50px !important;
+    border-color:#a1a1a1 !important;
+    background-color:#ffffff !important;
+    color: #000000 !important;
+}
+
 .homePagePointCardSectionBackground{
     background-color:#F8F9FA;
 }

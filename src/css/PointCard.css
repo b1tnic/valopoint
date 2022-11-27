@@ -122,7 +122,13 @@
 
 .pointCardContentMap{
     display: inline-block;
+    width:100%;
     height:87%;
+}
+
+.pointCardContentMapThumbnail{
+    width:100%;
+    height:100%;
 }
 
 .pointCardFooter{

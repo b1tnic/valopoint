@@ -15,7 +15,6 @@ import {
 } from "firebase/firestore";
 import Button from "react-bootstrap/Button";
 import Select from "react-select";
-import BootstrapSwitchButton from "bootstrap-switch-button-react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -28,36 +27,40 @@ const Home = () => {
   const [lastArticle, setLastArticle] = useState([]);
   const [map, setMap] = useState("");
   const [character, setCharacter] = useState("");
-  const [orderByPopular, setOrderByPopular] = useState(false);
-  const [orderByStrength, setOrderByStrength] = useState(false);
+  const [ifBeginnerCategoryClicked, setIfBeginnerCategoryClicked] =
+    useState(false);
+  const [ifIntermediateCategoryClicked, setIfIntermediateCategoryClicked] =
+    useState(false);
+  const [ifSeniorCategoryClicked, setIfSeniorCategoryClicked] = useState(false);
+  const [ifOtakuCategoryClicked, setIfOtakuCategoryClicked] = useState(false);
 
   const articlesCollectionRef = collection(db, "articles");
 
   // 検索関数searchingArticles
   const seatchingArticles = async () => {
     const searchingArticlesQuery = query(articlesCollectionRef);
+    // if (ability !== "") {
+    //   searchingArticlesQuery = query(
+    //     searchingArticlesQuery,
+    //     where("ability", "==", map)
+    //   );
+    // }
+    if (character !== "") {
+      searchingArticlesQuery = query(
+        searchingArticlesQuery,
+        where("character", "==", map)
+      );
+    }
+    // if (side !== "") {
+    //   searchingArticlesQuery = query(
+    //     searchingArticlesQuery,
+    //     where("side", "==", map)
+    //   );
+    // }
     if (map !== "") {
       searchingArticlesQuery = query(
         searchingArticlesQuery,
         where("map", "==", map)
-      );
-    }
-    if (character !== "") {
-      searchingArticlesQuery = query(
-        searchingArticlesQuery,
-        where("character", "==", character)
-      );
-    }
-    if (orderByPopular) {
-      searchingArticlesQuery = query(
-        searchingArticlesQuery,
-        orderBy("popular", "desc")
-      );
-    }
-    if (orderByStrength) {
-      searchingArticlesQuery = query(
-        searchingArticlesQuery,
-        orderBy("strength", "desc")
       );
     }
   };
@@ -79,11 +82,7 @@ const Home = () => {
 
   useEffect(() => {
     const getArticle = async () => {
-      const q = query(
-        articlesCollectionRef,
-        orderBy("popular", "desc"),
-        limit(10)
-      );
+      const q = query(articlesCollectionRef, limit(10));
       const articleDocs = await getDocs(q);
       setLastArticle(articleDocs.docs[articleDocs.docs.length - 1]);
       setArticles(
@@ -132,26 +131,65 @@ const Home = () => {
                 xs={{ span: 10, offset: 1 }}
               >
                 <Row>
-                  <Col lg={{ span: 2, offset: 0 }} xs={{ span: 2, offset: 0 }}>
-                    <p className="homePageSwitchingText">並び替え</p>
+                  <Col lg={{ span: 3, offset: 0 }} xs={{ span: 3, offset: 0 }}>
+                    <Button
+                      className={
+                        ifBeginnerCategoryClicked
+                          ? "beginnerClicked"
+                          : "notBeginnerClicked"
+                      }
+                      onClick={() => {
+                        setIfBeginnerCategoryClicked(
+                          !ifBeginnerCategoryClicked
+                        );
+                      }}
+                    >
+                      初心者
+                    </Button>
                   </Col>
-                  <Col lg={{ span: 4, offset: 0 }} xs={{ span: 4, offset: 0 }}>
-                    <BootstrapSwitchButton
-                      orderByStrength={false}
-                      onlabel="最強度"
-                      offlabel="最強度"
-                      onChange={() => setOrderByStrength(!orderByStrength)}
-                      width={175}
-                    />
+                  <Col lg={{ span: 3, offset: 0 }} xs={{ span: 3, offset: 0 }}>
+                    <Button
+                      className={
+                        ifIntermediateCategoryClicked
+                          ? "intermediateClicked"
+                          : "notIntermediateClicked"
+                      }
+                      onClick={() => {
+                        setIfIntermediateCategoryClicked(
+                          !ifIntermediateCategoryClicked
+                        );
+                      }}
+                    >
+                      中級物
+                    </Button>
                   </Col>
-                  <Col lg={{ span: 4, offset: 0 }} xs={{ span: 4, offset: 0 }}>
-                    <BootstrapSwitchButton
-                      orderByPopular={false}
-                      onlabel="知名度"
-                      offlabel="知名度"
-                      onChange={() => setOrderByPopular(!orderByPopular)}
-                      width={175}
-                    />
+                  <Col lg={{ span: 3, offset: 0 }} xs={{ span: 3, offset: 0 }}>
+                    <Button
+                      className={
+                        ifSeniorCategoryClicked
+                          ? "seniorClicked"
+                          : "notSeniorClicked"
+                      }
+                      onClick={() => {
+                        setIfSeniorCategoryClicked(!ifSeniorCategoryClicked);
+                      }}
+                    >
+                      上級者
+                    </Button>
+                  </Col>
+                  <Col lg={{ span: 3, offset: 0 }} xs={{ span: 3, offset: 0 }}>
+                    <Button
+                      className={
+                        ifOtakuCategoryClicked
+                          ? "otakuClicked"
+                          : "notOtakuClicked"
+                      }
+                      onClick={() => {
+                        setIfOtakuCategoryClicked(!ifOtakuCategoryClicked);
+                      }}
+                    >
+                      オタク
+                    </Button>
                   </Col>
                 </Row>
               </Col>
@@ -170,30 +208,29 @@ const Home = () => {
             <Row>
               <Col xl={{ span: 10, offset: 1 }} xs={{ span: 12, offset: 0 }}>
                 <Row className="homePagePointCardSection">
-                  <Col
-                    className="homePagePointCard"
-                    style={{ paddingLeft: 3, paddingRight: 3 }}
-                    xl={{ span: 6, offset: 0 }}
-                    xs={{ span: 12, offset: 0 }}
-                  >
-                    <PointCard></PointCard>
-                  </Col>
-                  <Col
-                    className="homePagePointCard"
-                    style={{ paddingLeft: 3, paddingRight: 3 }}
-                    xl={{ span: 6, offset: 0 }}
-                    xs={{ span: 12, offset: 0 }}
-                  >
-                    <PointCard></PointCard>
-                  </Col>
-                  <Col
-                    className="homePagePointCard"
-                    style={{ paddingLeft: 3, paddingRight: 3 }}
-                    xl={{ span: 6, offset: 0 }}
-                    xs={{ span: 12, offset: 0 }}
-                  >
-                    <PointCard></PointCard>
-                  </Col>
+                  <>
+                    {articles.map((article) => (
+                      <Col
+                        className="mapPagePointCard"
+                        style={{ paddingLeft: 3, paddingRight: 3 }}
+                        xl={{ span: 6, offset: 0 }}
+                        xs={{ span: 12, offset: 0 }}
+                        key={article.id}
+                      >
+                        <PointCard
+                          category={article.category}
+                          character={article.character}
+                          ability={article.ability}
+                          side={article.side}
+                          title={article.title}
+                          thumbnail={article.thumbnail}
+                          videoID={article.videoID}
+                          readTime={article.readTime}
+                          id={article.id}
+                        ></PointCard>
+                      </Col>
+                    ))}
+                  </>
                 </Row>
               </Col>
             </Row>

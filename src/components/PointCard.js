@@ -9,12 +9,14 @@ const PointCard = (props) => {
         <div className="pointCardContent">
           <div className="pointCardContentLeftSide">
             <div className="pointCardContentLeftSideTitle">
-              <p className="pointCardContentLeftSideTitleText">必見</p>
+              <p className="pointCardContentLeftSideTitleText">
+                {props.category}
+              </p>
             </div>
             <div className="pointCardContentLeftSideImage0">
               <img
                 src={require("../static/images/characters/" +
-                  "brimstone" +
+                  props.character +
                   ".jpg")}
                 style={{ width: 80 }}
                 alt={"Character"}
@@ -23,8 +25,9 @@ const PointCard = (props) => {
             <div className="pointCardContentLeftSideImage1">
               <img
                 src={require("../static/images/abilities/" +
-                  "brimstone/" +
-                  "Incendiary" +
+                  props.character +
+                  "/" +
+                  props.ability +
                   ".jpg")}
                 style={{ width: 80 }}
                 alt={"Character"}
@@ -32,33 +35,43 @@ const PointCard = (props) => {
             </div>
             <div className="pointCardContentLeftSideImage2">
               <img
-                src={require("../static/images/sides/" + "Defender" + ".jpg")}
+                src={require("../static/images/sides/" + props.side + ".jpg")}
                 style={{ width: 80 }}
-                alt={"Character"}
+                alt={props.side}
               ></img>
             </div>
           </div>
           <div className="pointCardContentRightSide">
             <div className="pointCardContentText">
               <Pen color="royalblue" size={32} />
-              これは説明です。これは説明です。
+              {props.title}
             </div>
             <div className="pointCardContentMap">
-              <Map color="royalblue" size={20} />
-              pointCardContentMap
+              <img
+                src={require("../static/images/thumbnails/" +
+                  props.thumbnail +
+                  ".jpg")}
+                className="pointCardContentMapThumbnail"
+                alt={"Character"}
+              ></img>
             </div>
           </div>
         </div>
         <div className="pointCardFooter">
           <div className="pointCardFooterButton">
-            <Button className="pointCardFooterDetail" href={"/Detail/1"}>
+            <Button
+              className="pointCardFooterDetail"
+              href={"/Detail/" + props.id}
+            >
               詳しく見る！
             </Button>
           </div>
           <div className="pointCardFooterYoutube">
             <a
               href={
-                "https://www.youtube.com/watch?v=ejIY4wfZhgg&ab_channel=ValoPoint"
+                "https://www.youtube.com/watch?v=" +
+                props.videoID +
+                "&ab_channel=ValoPoint"
               }
               target="_blank"
               rel="noopener noreferrer"
@@ -68,7 +81,7 @@ const PointCard = (props) => {
           </div>
           <div className="pointCardFooterClock">
             <Clock color="royalblue" size={28} />
-            <p className="pointCardFooterClockText">25s.</p>
+            <p className="pointCardFooterClockText">{String(props.readTime)}</p>
           </div>
         </div>
       </div>

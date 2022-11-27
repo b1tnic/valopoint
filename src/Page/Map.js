@@ -26,14 +26,22 @@ const Map = () => {
   const { mapParam } = useParams();
   const [articles, setArticles] = useState([]);
   const [lastArticle, setLastArticle] = useState([]);
-  const [map, setMap] = useState("");
+  const [ability, setAbility] = useState("");
   const [character, setCharacter] = useState("");
+  const [side, setSide] = useState("");
+  const [map, setMap] = useState("");
   const [characterSelected, setCharacterSelected] = useState(false);
   const [selectedCharacterAbility, setSelectedCharacterAbility] = useState([]);
   const [clickedCharacterAbilityNumber, setClickedCharacterAbilityNumber] =
     useState();
   const [ifClickedCharacterAbility, setIfClickedCharacterAbility] =
     useState(false);
+  const [ifBeginnerCategoryClicked, setIfBeginnerCategoryClicked] =
+    useState(false);
+  const [ifIntermediateCategoryClicked, setIfIntermediateCategoryClicked] =
+    useState(false);
+  const [ifSeniorCategoryClicked, setIfSeniorCategoryClicked] = useState(false);
+  const [ifOtakuCategoryClicked, setIfOtakuCategoryClicked] = useState(false);
 
   let backgroundImage;
   if (mapParam === "Ascent") {
@@ -58,13 +66,31 @@ const Map = () => {
 
   // 検索関数searchingArticles
   const seatchingArticles = async () => {
-    const searchingArticlesQuery = query(articlesCollectionRef);
+    let searchingArticlesQuery = query(articlesCollectionRef, limit(10));
+    if (ability !== "") {
+      searchingArticlesQuery = query(
+        searchingArticlesQuery,
+        where("ability", "==", map)
+      );
+    }
     if (character !== "") {
       searchingArticlesQuery = query(
         searchingArticlesQuery,
-        where("character", "==", character)
+        where("character", "==", map)
       );
     }
+    if (side !== "") {
+      searchingArticlesQuery = query(
+        searchingArticlesQuery,
+        where("side", "==", map)
+      );
+    }
+    searchingArticlesQuery = query(
+      searchingArticlesQuery,
+      where("map", "==", mapParam)
+    );
+    const articleData = await getDocs(searchingArticlesQuery);
+    setArticles(articleData.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
   // ページネーション関数loadNextPosts
@@ -115,6 +141,7 @@ const Map = () => {
                     setCharacter(character);
                     setCharacterSelected(true);
                     setSelectedCharacterAbility(character.ability);
+                    setClickedCharacterAbilityNumber();
                   }}
                 />
               </Col>
@@ -129,13 +156,17 @@ const Map = () => {
                         >
                           <img
                             src={require("../static/images/abilities/" +
-                              ability)}
+                              character.value +
+                              "/" +
+                              ability +
+                              ".jpg")}
                             style={{ width: 128 }}
                             alt={"Ability"}
                             onClick={() => {
                               clickedCharacterAbilityNumber === index
                                 ? setClickedCharacterAbilityNumber()
                                 : setClickedCharacterAbilityNumber(index);
+                              setAbility(ability);
                               setIfClickedCharacterAbility(
                                 !ifClickedCharacterAbility
                               );
@@ -156,7 +187,70 @@ const Map = () => {
                 className="mapPageSearchComponent"
                 lg={{ span: 8, offset: 2 }}
                 xs={{ span: 10, offset: 1 }}
-              ></Col>
+              >
+                <Row>
+                  <Col lg={{ span: 3, offset: 0 }} xs={{ span: 3, offset: 0 }}>
+                    <Button
+                      className={
+                        ifBeginnerCategoryClicked
+                          ? "beginnerClicked"
+                          : "notBeginnerClicked"
+                      }
+                      onClick={() => {
+                        setIfBeginnerCategoryClicked(
+                          !ifBeginnerCategoryClicked
+                        );
+                      }}
+                    >
+                      初心者
+                    </Button>
+                  </Col>
+                  <Col lg={{ span: 3, offset: 0 }} xs={{ span: 3, offset: 0 }}>
+                    <Button
+                      className={
+                        ifIntermediateCategoryClicked
+                          ? "intermediateClicked"
+                          : "notIntermediateClicked"
+                      }
+                      onClick={() => {
+                        setIfIntermediateCategoryClicked(
+                          !ifIntermediateCategoryClicked
+                        );
+                      }}
+                    >
+                      中級物
+                    </Button>
+                  </Col>
+                  <Col lg={{ span: 3, offset: 0 }} xs={{ span: 3, offset: 0 }}>
+                    <Button
+                      className={
+                        ifSeniorCategoryClicked
+                          ? "seniorClicked"
+                          : "notSeniorClicked"
+                      }
+                      onClick={() => {
+                        setIfSeniorCategoryClicked(!ifSeniorCategoryClicked);
+                      }}
+                    >
+                      上級者
+                    </Button>
+                  </Col>
+                  <Col lg={{ span: 3, offset: 0 }} xs={{ span: 3, offset: 0 }}>
+                    <Button
+                      className={
+                        ifOtakuCategoryClicked
+                          ? "otakuClicked"
+                          : "notOtakuClicked"
+                      }
+                      onClick={() => {
+                        setIfOtakuCategoryClicked(!ifOtakuCategoryClicked);
+                      }}
+                    >
+                      オタク
+                    </Button>
+                  </Col>
+                </Row>
+              </Col>
               <Col
                 className="mapPageSearchComponent"
                 lg={{ span: 6, offset: 3 }}
@@ -175,30 +269,29 @@ const Map = () => {
             <Row>
               <Col xl={{ span: 10, offset: 1 }} xs={{ span: 12, offset: 0 }}>
                 <Row className="mapPagePointCardSection">
-                  <Col
-                    className="mapPagePointCard"
-                    style={{ paddingLeft: 3, paddingRight: 3 }}
-                    xl={{ span: 6, offset: 0 }}
-                    xs={{ span: 12, offset: 0 }}
-                  >
-                    <PointCard></PointCard>
-                  </Col>
-                  <Col
-                    className="mapPagePointCard"
-                    style={{ paddingLeft: 3, paddingRight: 3 }}
-                    xl={{ span: 6, offset: 0 }}
-                    xs={{ span: 12, offset: 0 }}
-                  >
-                    <PointCard></PointCard>
-                  </Col>
-                  <Col
-                    className="mapPagePointCard"
-                    style={{ paddingLeft: 3, paddingRight: 3 }}
-                    xl={{ span: 6, offset: 0 }}
-                    xs={{ span: 12, offset: 0 }}
-                  >
-                    <PointCard></PointCard>
-                  </Col>
+                  <>
+                    {articles.map((article) => (
+                      <Col
+                        className="mapPagePointCard"
+                        style={{ paddingLeft: 3, paddingRight: 3 }}
+                        xl={{ span: 6, offset: 0 }}
+                        xs={{ span: 12, offset: 0 }}
+                        key={article.id}
+                      >
+                        <PointCard
+                          category={article.category}
+                          character={article.character}
+                          ability={article.ability}
+                          side={article.side}
+                          title={article.title}
+                          thumbnail={article.thumbnail}
+                          videoID={article.videoID}
+                          readTime={article.readTime}
+                          id={article.id}
+                        ></PointCard>
+                      </Col>
+                    ))}
+                  </>
                 </Row>
               </Col>
             </Row>
