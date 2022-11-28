@@ -211,8 +211,8 @@ const Home = () => {
                   <>
                     {articles.map((article) => (
                       <Col
-                        className="mapPagePointCard"
-                        style={{ paddingLeft: 3, paddingRight: 3 }}
+                        className="homePagePointCard"
+                        style={{ paddingLeft: 15, paddingRight: 15 }}
                         xl={{ span: 6, offset: 0 }}
                         xs={{ span: 12, offset: 0 }}
                         key={article.id}

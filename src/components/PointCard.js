@@ -3,6 +3,9 @@ import { Pen, Clock, Map, Youtube } from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 
 const PointCard = (props) => {
+  let min = String(Math.floor(props.readTime / 60)) + "分";
+  let sec = String(props.readTime % 60) + "秒";
+
   return (
     <>
       <div className="pointCard">
@@ -63,26 +66,13 @@ const PointCard = (props) => {
               className="pointCardFooterDetail"
               href={"/Detail/" + props.id}
             >
-              詳しく見る！
+              ('ω')
             </Button>
-          </div>
-          <div className="pointCardFooterYoutube">
-            <a
-              href={
-                "https://www.youtube.com/watch?v=" +
-                props.videoID +
-                "&ab_channel=ValoPoint"
-              }
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Youtube color="red" size={56} />
-            </a>
           </div>
           <div className="pointCardFooterClock">
             <Clock color="royalblue" size={28} />
-            <p className="pointCardFooterClockText">{String(props.readTime)}</p>
           </div>
+          <p className="pointCardFooterClockText">{min + sec}</p>
         </div>
       </div>
     </>

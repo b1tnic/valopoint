@@ -3,7 +3,9 @@
 }
 
 .mapPagePointCard{
-    margin-bottom:12px;
+    margin-bottom:18px;
+    padding-bottom:18px;
+    border-bottom:1px dotted;
 }
 
 .mapPageSearchComponent{

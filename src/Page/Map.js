@@ -218,7 +218,7 @@ const Map = () => {
                         );
                       }}
                     >
-                      中級物
+                      中級者
                     </Button>
                   </Col>
                   <Col lg={{ span: 3, offset: 0 }} xs={{ span: 3, offset: 0 }}>
@@ -273,7 +273,7 @@ const Map = () => {
                     {articles.map((article) => (
                       <Col
                         className="mapPagePointCard"
-                        style={{ paddingLeft: 3, paddingRight: 3 }}
+                        style={{ paddingLeft: 15, paddingRight: 15 }}
                         xl={{ span: 6, offset: 0 }}
                         xs={{ span: 12, offset: 0 }}
                         key={article.id}
