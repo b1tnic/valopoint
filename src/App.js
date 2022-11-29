@@ -2,6 +2,7 @@ import "./App.css";
 import Home from "./Page/Home";
 import Detail from "./Page/Detail";
 import Map from "./Page/Map";
+import Create from "./Page/Create";
 import Navbar from "./Page/Navbar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -15,6 +16,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/Detail/:id" element={<Detail />} />
             <Route path="/Map/:mapParam" element={<Map />} />
+            <Route path="/Create" element={<Create />} />
           </Routes>
         </Router>
       </div>

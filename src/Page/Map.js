@@ -28,8 +28,8 @@ const Map = () => {
   const [lastArticle, setLastArticle] = useState([]);
   const [ability, setAbility] = useState("");
   const [character, setCharacter] = useState("");
+  const [category, setCategory] = useState("");
   const [side, setSide] = useState("");
-  const [map, setMap] = useState("");
   const [characterSelected, setCharacterSelected] = useState(false);
   const [selectedCharacterAbility, setSelectedCharacterAbility] = useState([]);
   const [clickedCharacterAbilityNumber, setClickedCharacterAbilityNumber] =
@@ -65,24 +65,30 @@ const Map = () => {
   const articlesCollectionRef = collection(db, "articles");
 
   // 検索関数searchingArticles
-  const seatchingArticles = async () => {
+  const searchingArticles = async () => {
     let searchingArticlesQuery = query(articlesCollectionRef, limit(10));
     if (ability !== "") {
       searchingArticlesQuery = query(
         searchingArticlesQuery,
-        where("ability", "==", map)
+        where("ability", "==", ability)
       );
     }
     if (character !== "") {
       searchingArticlesQuery = query(
         searchingArticlesQuery,
-        where("character", "==", map)
+        where("character", "==", character.value)
       );
     }
     if (side !== "") {
       searchingArticlesQuery = query(
         searchingArticlesQuery,
-        where("side", "==", map)
+        where("side", "==", side)
+      );
+    }
+    if (category !== "") {
+      searchingArticlesQuery = query(
+        searchingArticlesQuery,
+        where("category", "==", category)
       );
     }
     searchingArticlesQuery = query(
@@ -112,7 +118,7 @@ const Map = () => {
       const q = query(
         articlesCollectionRef,
         where("map", "==", mapParam),
-        limit(10)
+        limit(50)
       );
       const articleDocs = await getDocs(q);
       setLastArticle(articleDocs.docs[articleDocs.docs.length - 1]);
@@ -200,6 +206,10 @@ const Map = () => {
                         setIfBeginnerCategoryClicked(
                           !ifBeginnerCategoryClicked
                         );
+                        setIfIntermediateCategoryClicked(false);
+                        setIfSeniorCategoryClicked(false);
+                        setIfOtakuCategoryClicked(false);
+                        setCategory("初心者");
                       }}
                     >
                       初心者
@@ -213,9 +223,13 @@ const Map = () => {
                           : "notIntermediateClicked"
                       }
                       onClick={() => {
+                        setIfBeginnerCategoryClicked(false);
                         setIfIntermediateCategoryClicked(
                           !ifIntermediateCategoryClicked
                         );
+                        setIfSeniorCategoryClicked(false);
+                        setIfOtakuCategoryClicked(false);
+                        setCategory("中級者");
                       }}
                     >
                       中級者
@@ -229,7 +243,11 @@ const Map = () => {
                           : "notSeniorClicked"
                       }
                       onClick={() => {
+                        setIfBeginnerCategoryClicked(false);
+                        setIfIntermediateCategoryClicked(false);
                         setIfSeniorCategoryClicked(!ifSeniorCategoryClicked);
+                        setIfOtakuCategoryClicked(false);
+                        setCategory("上級者");
                       }}
                     >
                       上級者
@@ -243,7 +261,11 @@ const Map = () => {
                           : "notOtakuClicked"
                       }
                       onClick={() => {
+                        setIfBeginnerCategoryClicked(false);
+                        setIfIntermediateCategoryClicked(false);
+                        setIfSeniorCategoryClicked(false);
                         setIfOtakuCategoryClicked(!ifOtakuCategoryClicked);
+                        setCategory("オタク");
                       }}
                     >
                       オタク
@@ -256,7 +278,12 @@ const Map = () => {
                 lg={{ span: 6, offset: 3 }}
                 xs={{ span: 8, offset: 2 }}
               >
-                <Button className="mapPageSearchButton">検索！</Button>
+                <Button
+                  className="mapPageSearchButton"
+                  onClick={searchingArticles}
+                >
+                  検索！
+                </Button>
               </Col>
             </Row>
           </Col>
@@ -273,7 +300,7 @@ const Map = () => {
                     {articles.map((article) => (
                       <Col
                         className="mapPagePointCard"
-                        style={{ paddingLeft: 15, paddingRight: 15 }}
+                        style={{ paddingLeft: 24, paddingRight: 24 }}
                         xl={{ span: 6, offset: 0 }}
                         xs={{ span: 12, offset: 0 }}
                         key={article.id}
