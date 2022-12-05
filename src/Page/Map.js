@@ -1,4 +1,5 @@
 import PointCard from "../components/PointCard";
+import QueryCount from "../components/QueryCount";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../firebase-config";
@@ -7,12 +8,9 @@ import {
   getDocs,
   query,
   where,
-  orderBy,
   limit,
   startAfter,
-  getDoc,
-  doc,
-  serverTimestamp,
+  getCountFromServer,
 } from "firebase/firestore";
 import Button from "react-bootstrap/Button";
 import Select from "react-select";
@@ -42,6 +40,7 @@ const Map = () => {
     useState(false);
   const [ifSeniorCategoryClicked, setIfSeniorCategoryClicked] = useState(false);
   const [ifOtakuCategoryClicked, setIfOtakuCategoryClicked] = useState(false);
+  const [articleCount, setArticleCount] = useState(0);
 
   let backgroundImage;
   if (mapParam === "Ascent") {
@@ -96,6 +95,10 @@ const Map = () => {
       where("map", "==", mapParam)
     );
     const articleData = await getDocs(searchingArticlesQuery);
+    const articleCount = await getCountFromServer(
+      query(searchingArticlesQuery)
+    );
+    setArticleCount(articleCount.data().count);
     setArticles(articleData.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
@@ -118,10 +121,14 @@ const Map = () => {
       const q = query(
         articlesCollectionRef,
         where("map", "==", mapParam),
-        limit(50)
+        limit(10)
       );
       const articleDocs = await getDocs(q);
       setLastArticle(articleDocs.docs[articleDocs.docs.length - 1]);
+      const articleCount = await getCountFromServer(
+        query(articlesCollectionRef, where("map", "==", mapParam))
+      );
+      setArticleCount(articleCount.data().count);
       setArticles(
         articleDocs.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       );
@@ -284,6 +291,13 @@ const Map = () => {
                 >
                   検索！
                 </Button>
+              </Col>
+              <Col
+                className="homePageSearchComponent"
+                lg={{ span: 8, offset: 2 }}
+                xs={{ span: 12, offset: 0 }}
+              >
+                <QueryCount count={articleCount}></QueryCount>
               </Col>
             </Row>
           </Col>

@@ -99,7 +99,7 @@ const Create = () => {
                 rows={1}
                 value={articleThumbnail}
                 placeholder="サムネイル画像名を入力"
-                maxLength="24"
+                maxLength="100"
                 onChange={(e) => setArticleThumbnail(e.target.value)}
               />
             </div>
