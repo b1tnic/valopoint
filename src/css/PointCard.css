@@ -82,20 +82,20 @@
 
 .pointCardContentMapAbility{
     top:35%;
-    left:81%;
+    left:1%;
     position: absolute;
-    width:18%;
+    width:21%;
     height:34%;
-    background-color:rgba(1, 1, 1, 0.95);
+    background-color:rgba(1, 1, 1, 0.85);
 }
 
 .pointCardContentMapSide{
     top:2%;
-    left:81%;
+    left:74%;
     position: absolute;
-    width:18%;
-    height:34%;
-    background-color:rgba(1, 1, 1, 0.95);}
+    width:25%;
+    height:41%;
+    background-color:rgba(0, 0, 0, 0.95);}
 
 .pointCardContentMapCategory{
     top:30%;

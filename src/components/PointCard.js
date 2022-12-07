@@ -39,19 +39,6 @@ const PointCard = (props) => {
               className="pointCardContentMapCharacter"
               alt={"Character"}
             ></img>
-            <p
-              className={
-                props.category === "初心者"
-                  ? "pointCardContentMapCategory pointCardContentMapCategoryBeginner"
-                  : props.category === "中級者"
-                  ? "pointCardContentMapCategory pointCardContentMapCategoryIntermediate"
-                  : props.category === "上級者"
-                  ? "pointCardContentMapCategory pointCardContentMapCategorySenior"
-                  : "pointCardContentMapCategory pointCardContentMapCategoryOtaku"
-              }
-            >
-              {props.category}
-            </p>
             <p className="pointCardContentMapText">{props.title}</p>
           </div>
         </div>

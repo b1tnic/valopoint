@@ -9,8 +9,11 @@ import {
   query,
   where,
   limit,
-  startAfter,
+  limitToLast,
   getCountFromServer,
+  endBefore,
+  startAfter,
+  orderBy,
 } from "firebase/firestore";
 import Button from "react-bootstrap/Button";
 import Select from "react-select";
@@ -23,10 +26,12 @@ import { Characters, IconOption } from "../static/options";
 const Map = () => {
   const { mapParam } = useParams();
   const [articles, setArticles] = useState([]);
-  const [lastArticle, setLastArticle] = useState([]);
   const [ability, setAbility] = useState("");
   const [character, setCharacter] = useState("");
   const [category, setCategory] = useState("");
+  const [ifAbilitySearched, setIfAbilitySearched] = useState(false);
+  const [ifCharacterSearched, setIfCharacterSearched] = useState(false);
+  const [ifCategorySearched, setIfCategorySearched] = useState(false);
   const [side, setSide] = useState("");
   const [characterSelected, setCharacterSelected] = useState(false);
   const [selectedCharacterAbility, setSelectedCharacterAbility] = useState([]);
@@ -41,6 +46,11 @@ const Map = () => {
   const [ifSeniorCategoryClicked, setIfSeniorCategoryClicked] = useState(false);
   const [ifOtakuCategoryClicked, setIfOtakuCategoryClicked] = useState(false);
   const [articleCount, setArticleCount] = useState(0);
+  const [firstArticle, setFirstArticle] = useState("");
+  const [lastArticle, setLastArticle] = useState("");
+  const articleLimit = 10;
+  const [page, setPage] = useState(0);
+  const [articlePageMaxLimit, setArticlePageMaxLimit] = useState(0);
 
   let backgroundImage;
   if (mapParam === "Ascent") {
@@ -65,18 +75,27 @@ const Map = () => {
 
   // 検索関数searchingArticles
   const searchingArticles = async () => {
-    let searchingArticlesQuery = query(articlesCollectionRef, limit(10));
+    setIfAbilitySearched("");
+    setIfCharacterSearched("");
+    setIfCategorySearched("");
+    let searchingArticlesQuery = query(
+      articlesCollectionRef,
+      orderBy("videoID", "desc"),
+      where("map", "==", mapParam)
+    );
     if (ability !== "") {
       searchingArticlesQuery = query(
         searchingArticlesQuery,
         where("ability", "==", ability)
       );
+      setIfAbilitySearched(true);
     }
     if (character !== "") {
       searchingArticlesQuery = query(
         searchingArticlesQuery,
         where("character", "==", character.value)
       );
+      setIfCharacterSearched(true);
     }
     if (side !== "") {
       searchingArticlesQuery = query(
@@ -89,30 +108,97 @@ const Map = () => {
         searchingArticlesQuery,
         where("category", "==", category)
       );
+      setIfCategorySearched(true);
     }
-    searchingArticlesQuery = query(
-      searchingArticlesQuery,
-      where("map", "==", mapParam)
-    );
-    const articleData = await getDocs(searchingArticlesQuery);
     const articleCount = await getCountFromServer(
       query(searchingArticlesQuery)
     );
     setArticleCount(articleCount.data().count);
-    setArticles(articleData.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    searchingArticlesQuery = query(searchingArticlesQuery, limit(articleLimit));
+    const articleData = await getDocs(searchingArticlesQuery);
+    if (articleData.docs.length !== 0) {
+      setArticles(
+        articleData.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
+    } else {
+      setArticles([]);
+    }
   };
 
-  // ページネーション関数loadNextPosts
+  // ページネーション関数loadNextArticles
   const loadNextArticles = async () => {
-    const nextArticlesQuery = query(
+    setPage(page + 1);
+    let nextArticlesQuery = query(
       articlesCollectionRef,
-      startAfter(lastArticle),
-      limit(10)
+      where("map", "==", mapParam),
+      orderBy("videoID", "desc"),
+      limit(articleLimit)
     );
+    if (ifAbilitySearched) {
+      nextArticlesQuery = query(
+        nextArticlesQuery,
+        where("ability", "==", ability)
+      );
+    }
+    if (ifCharacterSearched) {
+      nextArticlesQuery = query(
+        nextArticlesQuery,
+        where("character", "==", character.value)
+      );
+    }
+    if (ifCategorySearched) {
+      nextArticlesQuery = query(
+        nextArticlesQuery,
+        where("category", "==", category)
+      );
+    }
+    nextArticlesQuery = query(nextArticlesQuery, startAfter(lastArticle));
     const nextArticles = await getDocs(nextArticlesQuery);
-    setLastArticle(nextArticles.docs[nextArticles.docs.length - 1]);
+    setFirstArticle(nextArticles.docs[0].data().videoID);
+    setLastArticle(
+      nextArticles.docs[nextArticles.docs.length - 1].data().videoID
+    );
     setArticles(
       nextArticles.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+    );
+    console.log(lastArticle);
+  };
+
+  // ページネーション関数loadPastArticles
+  const loadPastArticles = async () => {
+    setPage(page - 1);
+    let pastArticlesQuery = query(
+      articlesCollectionRef,
+      where("map", "==", mapParam),
+      orderBy("videoID", "desc"),
+      limitToLast(articleLimit)
+    );
+    if (ifAbilitySearched) {
+      pastArticlesQuery = query(
+        pastArticlesQuery,
+        where("ability", "==", ability)
+      );
+    }
+    if (ifCharacterSearched) {
+      pastArticlesQuery = query(
+        pastArticlesQuery,
+        where("character", "==", character.value)
+      );
+    }
+    if (ifCategorySearched) {
+      pastArticlesQuery = query(
+        pastArticlesQuery,
+        where("category", "==", category)
+      );
+    }
+    pastArticlesQuery = query(pastArticlesQuery, endBefore(firstArticle));
+    const pastArticles = await getDocs(pastArticlesQuery);
+    setFirstArticle(pastArticles.docs[0].data().videoID);
+    setLastArticle(
+      pastArticles.docs[pastArticles.docs.length - 1].data().videoID
+    );
+    setArticles(
+      pastArticles.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
     );
   };
 
@@ -120,17 +206,23 @@ const Map = () => {
     const getArticle = async () => {
       const q = query(
         articlesCollectionRef,
+        orderBy("videoID", "desc"),
         where("map", "==", mapParam),
-        limit(10)
+        limit(articleLimit)
       );
       const articleDocs = await getDocs(q);
-      setLastArticle(articleDocs.docs[articleDocs.docs.length - 1]);
       const articleCount = await getCountFromServer(
         query(articlesCollectionRef, where("map", "==", mapParam))
       );
       setArticleCount(articleCount.data().count);
+      await setLastArticle(
+        articleDocs.docs[articleDocs.docs.length - 1].data().videoID
+      );
       setArticles(
         articleDocs.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
+      await setArticlePageMaxLimit(
+        Math.floor(articleCount.data().count / articleLimit)
       );
     };
     getArticle();
@@ -154,46 +246,58 @@ const Map = () => {
                     setCharacter(character);
                     setCharacterSelected(true);
                     setSelectedCharacterAbility(character.ability);
+                    setAbility("");
                     setClickedCharacterAbilityNumber();
                   }}
                 />
               </Col>
               {characterSelected && (
                 <>
-                  {selectedCharacterAbility.map((ability, index) => {
-                    return (
-                      <div className="mapPageAbilityBox" key={ability}>
-                        <Col
-                          lg={{ span: 3, offset: 0 }}
-                          xs={{ span: 4, offset: 0 }}
-                        >
-                          <img
-                            src={require("../static/images/abilities/" +
-                              character.value +
-                              "/" +
-                              ability +
-                              ".jpg")}
-                            style={{ width: 128 }}
-                            alt={"Ability"}
-                            onClick={() => {
-                              clickedCharacterAbilityNumber === index
-                                ? setClickedCharacterAbilityNumber()
-                                : setClickedCharacterAbilityNumber(index);
-                              setAbility(ability);
-                              setIfClickedCharacterAbility(
-                                !ifClickedCharacterAbility
-                              );
-                            }}
-                            className={
-                              index === clickedCharacterAbilityNumber
-                                ? "mapPageAbilityIconClicked"
-                                : "mapPageAbilityIconNotClicked"
-                            }
-                          />
-                        </Col>
-                      </div>
-                    );
-                  })}
+                  <Col
+                    lg={{ span: 10, offset: 1 }}
+                    xs={{ span: 12, offset: 0 }}
+                  >
+                    <Row>
+                      {selectedCharacterAbility.map((ability, index) => {
+                        return (
+                          <div className="mapPageAbilityBox" key={ability}>
+                            <Col
+                              lg={{ span: 3, offset: 0 }}
+                              xs={{ span: 4, offset: 0 }}
+                            >
+                              <img
+                                src={require("../static/images/abilities/" +
+                                  character.value +
+                                  "/" +
+                                  ability +
+                                  ".jpg")}
+                                style={{ width: 128 }}
+                                alt={"Ability"}
+                                onClick={() => {
+                                  if (clickedCharacterAbilityNumber === index) {
+                                    setClickedCharacterAbilityNumber();
+                                    setIfClickedCharacterAbility(
+                                      !ifClickedCharacterAbility
+                                    );
+                                    setAbility("");
+                                  } else {
+                                    setClickedCharacterAbilityNumber(index);
+                                    setIfClickedCharacterAbility(true);
+                                    setAbility(ability);
+                                  }
+                                }}
+                                className={
+                                  index === clickedCharacterAbilityNumber
+                                    ? "mapPageAbilityIconClicked"
+                                    : "mapPageAbilityIconNotClicked"
+                                }
+                              />
+                            </Col>
+                          </div>
+                        );
+                      })}
+                    </Row>
+                  </Col>
                 </>
               )}
               <Col
@@ -210,13 +314,17 @@ const Map = () => {
                           : "notBeginnerClicked"
                       }
                       onClick={() => {
+                        if (ifBeginnerCategoryClicked) {
+                          setCategory("");
+                        } else {
+                          setCategory("初心者");
+                        }
                         setIfBeginnerCategoryClicked(
                           !ifBeginnerCategoryClicked
                         );
                         setIfIntermediateCategoryClicked(false);
                         setIfSeniorCategoryClicked(false);
                         setIfOtakuCategoryClicked(false);
-                        setCategory("初心者");
                       }}
                     >
                       初心者
@@ -231,12 +339,16 @@ const Map = () => {
                       }
                       onClick={() => {
                         setIfBeginnerCategoryClicked(false);
+                        if (ifIntermediateCategoryClicked) {
+                          setCategory("");
+                        } else {
+                          setCategory("中級者");
+                        }
                         setIfIntermediateCategoryClicked(
                           !ifIntermediateCategoryClicked
                         );
                         setIfSeniorCategoryClicked(false);
                         setIfOtakuCategoryClicked(false);
-                        setCategory("中級者");
                       }}
                     >
                       中級者
@@ -252,9 +364,13 @@ const Map = () => {
                       onClick={() => {
                         setIfBeginnerCategoryClicked(false);
                         setIfIntermediateCategoryClicked(false);
+                        if (ifSeniorCategoryClicked) {
+                          setCategory("");
+                        } else {
+                          setCategory("上級者");
+                        }
                         setIfSeniorCategoryClicked(!ifSeniorCategoryClicked);
                         setIfOtakuCategoryClicked(false);
-                        setCategory("上級者");
                       }}
                     >
                       上級者
@@ -271,8 +387,12 @@ const Map = () => {
                         setIfBeginnerCategoryClicked(false);
                         setIfIntermediateCategoryClicked(false);
                         setIfSeniorCategoryClicked(false);
+                        if (ifOtakuCategoryClicked) {
+                          setCategory("");
+                        } else {
+                          setCategory("オタク");
+                        }
                         setIfOtakuCategoryClicked(!ifOtakuCategoryClicked);
-                        setCategory("オタク");
                       }}
                     >
                       オタク
@@ -295,7 +415,7 @@ const Map = () => {
               <Col
                 className="homePageSearchComponent"
                 lg={{ span: 8, offset: 2 }}
-                xs={{ span: 12, offset: 0 }}
+                xs={{ span: 8, offset: 2 }}
               >
                 <QueryCount count={articleCount}></QueryCount>
               </Col>
@@ -336,6 +456,39 @@ const Map = () => {
                 </Row>
               </Col>
             </Row>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={{ span: 6, offset: 3 }} xs={{ span: 12, offset: 0 }}>
+            {page == 0 ? (
+              <></>
+            ) : (
+              <>
+                <Button
+                  onClick={() => {
+                    loadPastArticles();
+                  }}
+                >
+                  前へ
+                </Button>
+              </>
+            )}
+            <>
+              {page * articleLimit + 1} ~ {(page + 1) * articleLimit}
+            </>
+            {page == articlePageMaxLimit ? (
+              <></>
+            ) : (
+              <>
+                <Button
+                  onClick={() => {
+                    loadNextArticles();
+                  }}
+                >
+                  次へ
+                </Button>
+              </>
+            )}
           </Col>
         </Row>
       </Container>

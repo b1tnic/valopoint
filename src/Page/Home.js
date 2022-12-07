@@ -7,9 +7,11 @@ import {
   getDocs,
   query,
   where,
-  orderBy,
   limit,
+  limitToLast,
+  endBefore,
   startAfter,
+  orderBy,
   getCountFromServer,
 } from "firebase/firestore";
 import Button from "react-bootstrap/Button";
@@ -22,11 +24,14 @@ import { Maps, Characters, IconOption } from "../static/options";
 
 const Home = () => {
   const [articles, setArticles] = useState([]);
-  const [lastArticle, setLastArticle] = useState([]);
   const [map, setMap] = useState("");
   const [ability, setAbility] = useState("");
   const [character, setCharacter] = useState("");
   const [category, setCategory] = useState("");
+  const [ifMapSearched, setIfMapSearched] = useState(false);
+  const [ifAbilitySearched, setIfAbilitySearched] = useState(false);
+  const [ifCharacterSearched, setIfCharacterSearched] = useState(false);
+  const [ifCategorySearched, setIfCategorySearched] = useState(false);
   const [side, setSide] = useState("");
   const [characterSelected, setCharacterSelected] = useState(false);
   const [selectedCharacterAbility, setSelectedCharacterAbility] = useState([]);
@@ -41,23 +46,37 @@ const Home = () => {
   const [ifSeniorCategoryClicked, setIfSeniorCategoryClicked] = useState(false);
   const [ifOtakuCategoryClicked, setIfOtakuCategoryClicked] = useState(false);
   const [articleCount, setArticleCount] = useState(0);
+  const [firstArticle, setFirstArticle] = useState("");
+  const [lastArticle, setLastArticle] = useState("");
+  const articleLimit = 10;
+  const [page, setPage] = useState(0);
+  const [articlePageMaxLimit, setArticlePageMaxLimit] = useState(0);
 
   const articlesCollectionRef = collection(db, "articles");
 
   // 検索関数searchingArticles
   const searchingArticles = async () => {
-    let searchingArticlesQuery = query(articlesCollectionRef, limit(10));
+    setIfAbilitySearched("");
+    setIfCharacterSearched("");
+    setIfCategorySearched("");
+    setIfMapSearched("");
+    let searchingArticlesQuery = query(
+      articlesCollectionRef,
+      orderBy("videoID", "desc")
+    );
     if (ability !== "") {
       searchingArticlesQuery = query(
         searchingArticlesQuery,
         where("ability", "==", ability)
       );
+      setIfAbilitySearched(true);
     }
     if (character !== "") {
       searchingArticlesQuery = query(
         searchingArticlesQuery,
         where("character", "==", character.value)
       );
+      setIfCharacterSearched(true);
     }
     if (side !== "") {
       searchingArticlesQuery = query(
@@ -70,46 +89,137 @@ const Home = () => {
         searchingArticlesQuery,
         where("category", "==", category)
       );
+      setIfCategorySearched(true);
     }
     if (map !== "") {
       searchingArticlesQuery = query(
         searchingArticlesQuery,
         where("map", "==", map)
       );
+      setIfMapSearched(true);
     }
-    const articleData = await getDocs(searchingArticlesQuery);
     const articleCount = await getCountFromServer(searchingArticlesQuery);
     setArticleCount(articleCount.data().count);
-    setArticles(articleData.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    searchingArticlesQuery = query(searchingArticlesQuery, limit(articleLimit));
+    const articleData = await getDocs(searchingArticlesQuery);
+    setLastArticle(
+      articleData.docs[articleData.docs.length - 1].data().videoID
+    );
+    if (articleData.docs.length !== 0) {
+      setArticles(
+        articleData.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
+    } else {
+      setArticles([]);
+    }
+    setPage(0);
+    await setArticlePageMaxLimit(
+      Math.floor(articleCount.data().count / articleLimit)
+    );
   };
 
-  // ページネーション関数loadNextPosts
+  // ページネーション関数loadNextArticles
   const loadNextArticles = async () => {
-    const nextArticlesQuery = query(
+    setPage(page + 1);
+    let nextArticlesQuery = query(
       articlesCollectionRef,
-      orderBy("popular", "desc"),
-      startAfter(lastArticle),
-      limit(10)
+      orderBy("videoID", "desc"),
+      limit(articleLimit)
     );
+    if (ifAbilitySearched) {
+      nextArticlesQuery = query(
+        nextArticlesQuery,
+        where("ability", "==", ability)
+      );
+    }
+    if (ifCharacterSearched) {
+      nextArticlesQuery = query(
+        nextArticlesQuery,
+        where("character", "==", character.value)
+      );
+    }
+    if (ifCategorySearched) {
+      nextArticlesQuery = query(
+        nextArticlesQuery,
+        where("category", "==", category)
+      );
+    }
+    if (ifMapSearched) {
+      nextArticlesQuery = query(nextArticlesQuery, where("map", "==", map));
+    }
+    nextArticlesQuery = query(nextArticlesQuery, startAfter(lastArticle));
     const nextArticles = await getDocs(nextArticlesQuery);
-    setLastArticle(nextArticles.docs[nextArticles.docs.length - 1]);
+    setFirstArticle(nextArticles.docs[0].data().videoID);
+    setLastArticle(
+      nextArticles.docs[nextArticles.docs.length - 1].data().videoID
+    );
     setArticles(
       nextArticles.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+    );
+    console.log(lastArticle);
+  };
+
+  // ページネーション関数loadPastArticles
+  const loadPastArticles = async () => {
+    setPage(page - 1);
+    let pastArticlesQuery = query(
+      articlesCollectionRef,
+      orderBy("videoID", "desc"),
+      limitToLast(articleLimit)
+    );
+    if (ifAbilitySearched) {
+      pastArticlesQuery = query(
+        pastArticlesQuery,
+        where("ability", "==", ability)
+      );
+    }
+    if (ifCharacterSearched) {
+      pastArticlesQuery = query(
+        pastArticlesQuery,
+        where("character", "==", character.value)
+      );
+    }
+    if (ifCategorySearched) {
+      pastArticlesQuery = query(
+        pastArticlesQuery,
+        where("category", "==", category)
+      );
+    }
+    if (ifMapSearched) {
+      pastArticlesQuery = query(pastArticlesQuery, where("map", "==", map));
+    }
+    pastArticlesQuery = query(pastArticlesQuery, endBefore(firstArticle));
+    const pastArticles = await getDocs(pastArticlesQuery);
+    setFirstArticle(pastArticles.docs[0].data().videoID);
+    setLastArticle(
+      pastArticles.docs[pastArticles.docs.length - 1].data().videoID
+    );
+    setArticles(
+      pastArticles.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
     );
   };
 
   useEffect(() => {
     const getArticle = async () => {
-      const q = query(articlesCollectionRef, limit(10));
+      const q = query(
+        articlesCollectionRef,
+        orderBy("videoID", "desc"),
+        limit(articleLimit)
+      );
+      const articleDocs = await getDocs(q);
       const articleCount = await getCountFromServer(
         query(articlesCollectionRef)
       );
-      const articleDocs = await getDocs(q);
-      setLastArticle(articleDocs.docs[articleDocs.docs.length - 1]);
+      setArticleCount(articleCount.data().count);
+      await setLastArticle(
+        articleDocs.docs[articleDocs.docs.length - 1].data().videoID
+      );
       setArticles(
         articleDocs.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       );
-      setArticleCount(articleCount.data().count);
+      await setArticlePageMaxLimit(
+        Math.floor(articleCount.data().count / articleLimit)
+      );
     };
     getArticle();
   }, []);
@@ -146,6 +256,7 @@ const Home = () => {
                     setCharacter(character);
                     setCharacterSelected(true);
                     setSelectedCharacterAbility(character.ability);
+                    setAbility("");
                     setClickedCharacterAbilityNumber();
                   }}
                 />
@@ -173,13 +284,17 @@ const Home = () => {
                                 style={{ width: 128 }}
                                 alt={"Ability"}
                                 onClick={() => {
-                                  clickedCharacterAbilityNumber === index
-                                    ? setClickedCharacterAbilityNumber()
-                                    : setClickedCharacterAbilityNumber(index);
-                                  setAbility(ability);
-                                  setIfClickedCharacterAbility(
-                                    !ifClickedCharacterAbility
-                                  );
+                                  if (clickedCharacterAbilityNumber === index) {
+                                    setClickedCharacterAbilityNumber();
+                                    setIfClickedCharacterAbility(
+                                      !ifClickedCharacterAbility
+                                    );
+                                    setAbility("");
+                                  } else {
+                                    setClickedCharacterAbilityNumber(index);
+                                    setIfClickedCharacterAbility(true);
+                                    setAbility(ability);
+                                  }
                                 }}
                                 className={
                                   index === clickedCharacterAbilityNumber
@@ -209,13 +324,17 @@ const Home = () => {
                           : "notBeginnerClicked"
                       }
                       onClick={() => {
+                        if (ifBeginnerCategoryClicked) {
+                          setCategory("");
+                        } else {
+                          setCategory("初心者");
+                        }
                         setIfBeginnerCategoryClicked(
                           !ifBeginnerCategoryClicked
                         );
                         setIfIntermediateCategoryClicked(false);
                         setIfSeniorCategoryClicked(false);
                         setIfOtakuCategoryClicked(false);
-                        setCategory("初心者");
                       }}
                     >
                       初心者
@@ -230,12 +349,16 @@ const Home = () => {
                       }
                       onClick={() => {
                         setIfBeginnerCategoryClicked(false);
+                        if (ifIntermediateCategoryClicked) {
+                          setCategory("");
+                        } else {
+                          setCategory("中級者");
+                        }
                         setIfIntermediateCategoryClicked(
                           !ifIntermediateCategoryClicked
                         );
                         setIfSeniorCategoryClicked(false);
                         setIfOtakuCategoryClicked(false);
-                        setCategory("中級者");
                       }}
                     >
                       中級者
@@ -251,9 +374,13 @@ const Home = () => {
                       onClick={() => {
                         setIfBeginnerCategoryClicked(false);
                         setIfIntermediateCategoryClicked(false);
+                        if (ifSeniorCategoryClicked) {
+                          setCategory("");
+                        } else {
+                          setCategory("上級者");
+                        }
                         setIfSeniorCategoryClicked(!ifSeniorCategoryClicked);
                         setIfOtakuCategoryClicked(false);
-                        setCategory("上級者");
                       }}
                     >
                       上級者
@@ -270,8 +397,12 @@ const Home = () => {
                         setIfBeginnerCategoryClicked(false);
                         setIfIntermediateCategoryClicked(false);
                         setIfSeniorCategoryClicked(false);
+                        if (ifOtakuCategoryClicked) {
+                          setCategory("");
+                        } else {
+                          setCategory("オタク");
+                        }
                         setIfOtakuCategoryClicked(!ifOtakuCategoryClicked);
-                        setCategory("オタク");
                       }}
                     >
                       オタク
@@ -294,7 +425,7 @@ const Home = () => {
               <Col
                 className="homePageSearchComponent"
                 lg={{ span: 8, offset: 2 }}
-                xs={{ span: 12, offset: 0 }}
+                xs={{ span: 8, offset: 2 }}
               >
                 <QueryCount count={articleCount}></QueryCount>
               </Col>
@@ -332,6 +463,39 @@ const Home = () => {
                 </Row>
               </Col>
             </Row>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={{ span: 6, offset: 3 }} xs={{ span: 12, offset: 0 }}>
+            {page == 0 ? (
+              <></>
+            ) : (
+              <>
+                <Button
+                  onClick={() => {
+                    loadPastArticles();
+                  }}
+                >
+                  前へ
+                </Button>
+              </>
+            )}
+            <>
+              {page * articleLimit + 1} ~ {(page + 1) * articleLimit}
+            </>
+            {page == articlePageMaxLimit ? (
+              <></>
+            ) : (
+              <>
+                <Button
+                  onClick={() => {
+                    loadNextArticles();
+                  }}
+                >
+                  次へ
+                </Button>
+              </>
+            )}
           </Col>
         </Row>
       </Container>
