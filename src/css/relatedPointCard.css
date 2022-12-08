@@ -1,0 +1,49 @@
+.relatedPointCard {
+    background-color:#fffffffa;
+    width: 100%;
+    height:200px;
+    border-radius:10px;
+    position: relative;
+}
+
+.relatedPointCardThumbnailArea{
+    width: 100%;
+    height:100%;
+}
+
+.relatedPointCardThumbnail{
+    width:100%;
+    height:100%;
+    border-radius:15px;
+}
+
+.relatedPointCardSide{
+    position:absolute;
+    top:0%;
+    left:65%;
+    width:33%;
+    height:33%;
+}
+
+.relatedPointCardContentThumbnailCharacter{
+    position:absolute;
+    top:0%;
+    left:0%;
+    width:29%;
+    height:29%;
+    border-radius: 10px 0 0 0;
+}
+
+.relatedPointCardTime{
+    position:absolute;
+    top:90%;
+    left:77%;
+    padding-left:5%;
+    padding-right:2%;
+    width:20%;
+    height:10%;
+    border-radius: 5px 5px 5px 5px;
+    background-color:rgba(0, 0, 0, 0.8);
+    font-size:14px;
+    color:#fffffffa;
+}
