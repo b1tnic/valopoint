@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  collection,
-  addDoc,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  increment,
-  Timestamp,
-} from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";

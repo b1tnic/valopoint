@@ -4,6 +4,7 @@ import Detail from "./Page/Detail";
 import Map from "./Page/Map";
 import Create from "./Page/Create";
 import Navbar from "./Page/Navbar";
+import Inquiry from "./Page/Inquiry";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
             <Route path="/Detail/:id" element={<Detail />} />
             <Route path="/Map/:mapParam" element={<Map />} />
             <Route path="/Create" element={<Create />} />
+            <Route path="/Inquiry" element={<Inquiry />} />
           </Routes>
         </Router>
       </div>
