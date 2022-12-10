@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Footer from "../components/Footer";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, Timestamp } from "firebase/firestore";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { db } from "../firebase-config";
@@ -19,12 +19,13 @@ const Inquiry = () => {
       await addDoc(collection(db, "inquiries"), {
         category: category,
         description: description,
+        createdAt: Timestamp.now(),
       });
       alert("投稿しました！ありがとうございます！３秒後に移動します・・・");
       function action() {
         window.location.href = "../";
       }
-      setTimeout(action, 1000);
+      setTimeout(action, 3000);
     } catch (error) {
       alert(error);
     }

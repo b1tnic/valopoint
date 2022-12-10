@@ -18,7 +18,6 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/Detail/:id" element={<Detail />} />
             <Route path="/Map/:mapParam" element={<Map />} />
-            <Route path="/Create" element={<Create />} />
             <Route path="/Inquiry" element={<Inquiry />} />
             <Route path="/Explain" element={<Explain />} />
           </Routes>
