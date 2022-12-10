@@ -5,6 +5,7 @@ import Map from "./Page/Map";
 import Create from "./Page/Create";
 import Navbar from "./Page/Navbar";
 import Inquiry from "./Page/Inquiry";
+import Explain from "./Page/Explain";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
             <Route path="/Map/:mapParam" element={<Map />} />
             <Route path="/Create" element={<Create />} />
             <Route path="/Inquiry" element={<Inquiry />} />
+            <Route path="/Explain" element={<Explain />} />
           </Routes>
         </Router>
       </div>

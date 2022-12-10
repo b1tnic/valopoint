@@ -8,12 +8,12 @@
 }
 
 .navbarBrand{
-    font-size:28px !important;
+    font-size:24px !important;
 }
 
-.navbarLink {
-    font-size:20px !important;
-}
+/* .navbarLink {
+    font-size:16px !important;
+} */
 
 .navbarIcon {
     margin-right:4px;
