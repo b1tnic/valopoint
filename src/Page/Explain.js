@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { collection } from "firebase/firestore";
+import Footer from "../components/Footer";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { db } from "../firebase-config";
 import "../css/Explain.css";
 
 const Explain = () => {
@@ -53,6 +52,7 @@ const Explain = () => {
           </Col>
         </Row>
       </div>
+      <Footer />
     </>
   );
 };

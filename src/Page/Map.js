@@ -1,4 +1,5 @@
 import PointCard from "../components/PointCard";
+import Footer from "../components/Footer";
 import Loading from "../components/Loading";
 import QueryCount from "../components/QueryCount";
 import { useEffect, useState } from "react";
@@ -512,6 +513,7 @@ const Map = () => {
           </Row>
         </Container>
       )}
+      <Footer />
     </>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Footer from "../components/Footer";
 import { collection, addDoc } from "firebase/firestore";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
@@ -191,6 +192,7 @@ const Create = () => {
           </Form>
         </Col>
       </Row>
+      <Footer />
     </>
   );
 };

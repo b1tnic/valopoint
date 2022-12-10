@@ -1,4 +1,5 @@
 import PointCard from "../components/PointCard";
+import Footer from "../components/Footer";
 import QueryCount from "../components/QueryCount";
 import Loading from "../components/Loading";
 import { useEffect, useState } from "react";
@@ -518,6 +519,7 @@ const Home = () => {
           </Row>
         </Container>
       )}
+      <Footer />
     </>
   );
 };

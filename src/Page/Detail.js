@@ -1,4 +1,5 @@
 import { db } from "../firebase-config";
+import Footer from "../components/Footer";
 import RelatedPointCard from "../components/RelatedPointCard";
 import Loading from "../components/Loading";
 import { useEffect, useState } from "react";
@@ -126,6 +127,7 @@ const Detail = (props) => {
           </Row>
         </>
       )}
+      <Footer />
     </>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Footer from "../components/Footer";
 import { collection, addDoc } from "firebase/firestore";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -63,6 +64,7 @@ const Inquiry = () => {
           </Form>
         </Col>
       </Row>
+      <Footer />
     </>
   );
 };
