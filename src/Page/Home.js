@@ -484,39 +484,41 @@ const Home = () => {
               </Row>
             </Col>
           </Row>
-          <Row>
-            <Col lg={{ span: 6, offset: 3 }} xs={{ span: 12, offset: 0 }}>
-              {page == 0 ? (
-                <></>
-              ) : (
+          <div>
+            <Row className="homePagePagination">
+              <Col lg={{ span: 6, offset: 5 }} xs={{ span: 6, offset: 5 }}>
+                {page == 0 ? (
+                  <></>
+                ) : (
+                  <>
+                    <Button
+                      onClick={() => {
+                        loadPastArticles();
+                      }}
+                    >
+                      前へ
+                    </Button>
+                  </>
+                )}
                 <>
-                  <Button
-                    onClick={() => {
-                      loadPastArticles();
-                    }}
-                  >
-                    前へ
-                  </Button>
+                  {page * articleLimit + 1} ~ {(page + 1) * articleLimit}
                 </>
-              )}
-              <>
-                {page * articleLimit + 1} ~ {(page + 1) * articleLimit}
-              </>
-              {page == articlePageMaxLimit ? (
-                <></>
-              ) : (
-                <>
-                  <Button
-                    onClick={() => {
-                      loadNextArticles();
-                    }}
-                  >
-                    次へ
-                  </Button>
-                </>
-              )}
-            </Col>
-          </Row>
+                {page == articlePageMaxLimit ? (
+                  <></>
+                ) : (
+                  <>
+                    <Button
+                      onClick={() => {
+                        loadNextArticles();
+                      }}
+                    >
+                      次へ
+                    </Button>
+                  </>
+                )}
+              </Col>
+            </Row>
+          </div>
         </Container>
       )}
       <Footer />
