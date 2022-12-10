@@ -1,4 +1,5 @@
 import PointCard from "../components/PointCard";
+import Loading from "../components/Loading";
 import QueryCount from "../components/QueryCount";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -51,6 +52,7 @@ const Map = () => {
   const articleLimit = 10;
   const [page, setPage] = useState(0);
   const [articlePageMaxLimit, setArticlePageMaxLimit] = useState(0);
+  const [ifLoading, setIfLoading] = useState(false);
 
   let backgroundImage;
   if (mapParam === "Ascent") {
@@ -226,272 +228,290 @@ const Map = () => {
       );
     };
     getArticle();
+    setIfLoading(true);
   }, []);
   return (
     <>
-      <Container fluid>
-        <Row>
-          <Col lg={{ span: 8, offset: 2 }} xs={{ span: 10, offset: 1 }}>
-            <Row>
-              <Col
-                className="mapPageSearchComponent"
-                lg={{ span: 10, offset: 1 }}
-                xs={{ span: 12, offset: 0 }}
-              >
-                <Select
-                  options={Characters}
-                  components={{ Option: IconOption }}
-                  placeholder="キャラを選択"
-                  onChange={(character) => {
-                    setCharacter(character);
-                    setCharacterSelected(true);
-                    setSelectedCharacterAbility(character.ability);
-                    setAbility("");
-                    setClickedCharacterAbilityNumber();
-                  }}
-                />
-              </Col>
-              {characterSelected && (
-                <>
-                  <Col
-                    lg={{ span: 10, offset: 1 }}
-                    xs={{ span: 12, offset: 0 }}
-                  >
-                    <Row>
-                      {selectedCharacterAbility.map((ability, index) => {
-                        return (
-                          <div className="mapPageAbilityBox" key={ability}>
-                            <Col
-                              lg={{ span: 3, offset: 0 }}
-                              xs={{ span: 4, offset: 0 }}
-                            >
-                              <img
-                                src={require("../static/images/abilities/" +
-                                  character.value +
-                                  "/" +
-                                  ability +
-                                  ".jpg")}
-                                style={{ width: 128 }}
-                                alt={"Ability"}
-                                onClick={() => {
-                                  if (clickedCharacterAbilityNumber === index) {
-                                    setClickedCharacterAbilityNumber();
-                                    setIfClickedCharacterAbility(
-                                      !ifClickedCharacterAbility
-                                    );
-                                    setAbility("");
-                                  } else {
-                                    setClickedCharacterAbilityNumber(index);
-                                    setIfClickedCharacterAbility(true);
-                                    setAbility(ability);
+      {!ifLoading && <Loading />}
+      {ifLoading && (
+        <Container fluid>
+          <Row>
+            <Col lg={{ span: 8, offset: 2 }} xs={{ span: 10, offset: 1 }}>
+              <Row>
+                <Col
+                  className="mapPageSearchComponent"
+                  lg={{ span: 10, offset: 1 }}
+                  xs={{ span: 12, offset: 0 }}
+                >
+                  <Select
+                    options={Characters}
+                    components={{ Option: IconOption }}
+                    placeholder="キャラを選択"
+                    onChange={(character) => {
+                      setCharacter(character);
+                      setCharacterSelected(true);
+                      setSelectedCharacterAbility(character.ability);
+                      setAbility("");
+                      setClickedCharacterAbilityNumber();
+                    }}
+                  />
+                </Col>
+                {characterSelected && (
+                  <>
+                    <Col
+                      lg={{ span: 10, offset: 1 }}
+                      xs={{ span: 12, offset: 0 }}
+                    >
+                      <Row>
+                        {selectedCharacterAbility.map((ability, index) => {
+                          return (
+                            <div className="mapPageAbilityBox" key={ability}>
+                              <Col
+                                lg={{ span: 3, offset: 0 }}
+                                xs={{ span: 4, offset: 0 }}
+                              >
+                                <img
+                                  src={require("../static/images/abilities/" +
+                                    character.value +
+                                    "/" +
+                                    ability +
+                                    ".jpg")}
+                                  style={{ width: 128 }}
+                                  alt={"Ability"}
+                                  onClick={() => {
+                                    if (
+                                      clickedCharacterAbilityNumber === index
+                                    ) {
+                                      setClickedCharacterAbilityNumber();
+                                      setIfClickedCharacterAbility(
+                                        !ifClickedCharacterAbility
+                                      );
+                                      setAbility("");
+                                    } else {
+                                      setClickedCharacterAbilityNumber(index);
+                                      setIfClickedCharacterAbility(true);
+                                      setAbility(ability);
+                                    }
+                                  }}
+                                  className={
+                                    index === clickedCharacterAbilityNumber
+                                      ? "mapPageAbilityIconClicked"
+                                      : "mapPageAbilityIconNotClicked"
                                   }
-                                }}
-                                className={
-                                  index === clickedCharacterAbilityNumber
-                                    ? "mapPageAbilityIconClicked"
-                                    : "mapPageAbilityIconNotClicked"
-                                }
-                              />
-                            </Col>
-                          </div>
-                        );
-                      })}
-                    </Row>
-                  </Col>
+                                />
+                              </Col>
+                            </div>
+                          );
+                        })}
+                      </Row>
+                    </Col>
+                  </>
+                )}
+                <Col
+                  className="mapPageSearchComponent"
+                  lg={{ span: 8, offset: 2 }}
+                  xs={{ span: 10, offset: 1 }}
+                >
+                  <Row>
+                    <Col
+                      lg={{ span: 3, offset: 0 }}
+                      xs={{ span: 3, offset: 0 }}
+                    >
+                      <Button
+                        className={
+                          ifBeginnerCategoryClicked
+                            ? "beginnerClicked"
+                            : "notBeginnerClicked"
+                        }
+                        onClick={() => {
+                          if (ifBeginnerCategoryClicked) {
+                            setCategory("");
+                          } else {
+                            setCategory("初心者");
+                          }
+                          setIfBeginnerCategoryClicked(
+                            !ifBeginnerCategoryClicked
+                          );
+                          setIfIntermediateCategoryClicked(false);
+                          setIfSeniorCategoryClicked(false);
+                          setIfOtakuCategoryClicked(false);
+                        }}
+                      >
+                        初心者
+                      </Button>
+                    </Col>
+                    <Col
+                      lg={{ span: 3, offset: 0 }}
+                      xs={{ span: 3, offset: 0 }}
+                    >
+                      <Button
+                        className={
+                          ifIntermediateCategoryClicked
+                            ? "intermediateClicked"
+                            : "notIntermediateClicked"
+                        }
+                        onClick={() => {
+                          setIfBeginnerCategoryClicked(false);
+                          if (ifIntermediateCategoryClicked) {
+                            setCategory("");
+                          } else {
+                            setCategory("中級者");
+                          }
+                          setIfIntermediateCategoryClicked(
+                            !ifIntermediateCategoryClicked
+                          );
+                          setIfSeniorCategoryClicked(false);
+                          setIfOtakuCategoryClicked(false);
+                        }}
+                      >
+                        中級者
+                      </Button>
+                    </Col>
+                    <Col
+                      lg={{ span: 3, offset: 0 }}
+                      xs={{ span: 3, offset: 0 }}
+                    >
+                      <Button
+                        className={
+                          ifSeniorCategoryClicked
+                            ? "seniorClicked"
+                            : "notSeniorClicked"
+                        }
+                        onClick={() => {
+                          setIfBeginnerCategoryClicked(false);
+                          setIfIntermediateCategoryClicked(false);
+                          if (ifSeniorCategoryClicked) {
+                            setCategory("");
+                          } else {
+                            setCategory("上級者");
+                          }
+                          setIfSeniorCategoryClicked(!ifSeniorCategoryClicked);
+                          setIfOtakuCategoryClicked(false);
+                        }}
+                      >
+                        上級者
+                      </Button>
+                    </Col>
+                    <Col
+                      lg={{ span: 3, offset: 0 }}
+                      xs={{ span: 3, offset: 0 }}
+                    >
+                      <Button
+                        className={
+                          ifOtakuCategoryClicked
+                            ? "otakuClicked"
+                            : "notOtakuClicked"
+                        }
+                        onClick={() => {
+                          setIfBeginnerCategoryClicked(false);
+                          setIfIntermediateCategoryClicked(false);
+                          setIfSeniorCategoryClicked(false);
+                          if (ifOtakuCategoryClicked) {
+                            setCategory("");
+                          } else {
+                            setCategory("オタク");
+                          }
+                          setIfOtakuCategoryClicked(!ifOtakuCategoryClicked);
+                        }}
+                      >
+                        オタク
+                      </Button>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col
+                  className="mapPageSearchComponent"
+                  lg={{ span: 6, offset: 3 }}
+                  xs={{ span: 8, offset: 2 }}
+                >
+                  <Button
+                    className="mapPageSearchButton"
+                    onClick={searchingArticles}
+                  >
+                    検索！
+                  </Button>
+                </Col>
+                <Col
+                  className="homePageSearchComponent"
+                  lg={{ span: 8, offset: 2 }}
+                  xs={{ span: 8, offset: 2 }}
+                >
+                  <QueryCount count={articleCount}></QueryCount>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+          <Row
+            className="mapPagePointCardSectionBackground"
+            style={{ backgroundImage: `url(${backgroundImage})` }}
+          >
+            <Col xl={{ span: 10, offset: 1 }} xs={{ span: 10, offset: 1 }}>
+              <Row>
+                <Col xl={{ span: 10, offset: 1 }} xs={{ span: 12, offset: 0 }}>
+                  <Row className="mapPagePointCardSection">
+                    <>
+                      {articles.map((article) => (
+                        <Col
+                          className="mapPagePointCard"
+                          style={{ paddingLeft: 24, paddingRight: 24 }}
+                          xl={{ span: 6, offset: 0 }}
+                          xs={{ span: 12, offset: 0 }}
+                          key={article.id}
+                        >
+                          <PointCard
+                            category={article.category}
+                            character={article.character}
+                            ability={article.ability}
+                            side={article.side}
+                            title={article.title}
+                            thumbnail={article.thumbnail}
+                            videoID={article.videoID}
+                            readTime={article.readTime}
+                            id={article.id}
+                          ></PointCard>
+                        </Col>
+                      ))}
+                    </>
+                  </Row>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={{ span: 6, offset: 3 }} xs={{ span: 12, offset: 0 }}>
+              {page == 0 ? (
+                <></>
+              ) : (
+                <>
+                  <Button
+                    onClick={() => {
+                      loadPastArticles();
+                    }}
+                  >
+                    前へ
+                  </Button>
                 </>
               )}
-              <Col
-                className="mapPageSearchComponent"
-                lg={{ span: 8, offset: 2 }}
-                xs={{ span: 10, offset: 1 }}
-              >
-                <Row>
-                  <Col lg={{ span: 3, offset: 0 }} xs={{ span: 3, offset: 0 }}>
-                    <Button
-                      className={
-                        ifBeginnerCategoryClicked
-                          ? "beginnerClicked"
-                          : "notBeginnerClicked"
-                      }
-                      onClick={() => {
-                        if (ifBeginnerCategoryClicked) {
-                          setCategory("");
-                        } else {
-                          setCategory("初心者");
-                        }
-                        setIfBeginnerCategoryClicked(
-                          !ifBeginnerCategoryClicked
-                        );
-                        setIfIntermediateCategoryClicked(false);
-                        setIfSeniorCategoryClicked(false);
-                        setIfOtakuCategoryClicked(false);
-                      }}
-                    >
-                      初心者
-                    </Button>
-                  </Col>
-                  <Col lg={{ span: 3, offset: 0 }} xs={{ span: 3, offset: 0 }}>
-                    <Button
-                      className={
-                        ifIntermediateCategoryClicked
-                          ? "intermediateClicked"
-                          : "notIntermediateClicked"
-                      }
-                      onClick={() => {
-                        setIfBeginnerCategoryClicked(false);
-                        if (ifIntermediateCategoryClicked) {
-                          setCategory("");
-                        } else {
-                          setCategory("中級者");
-                        }
-                        setIfIntermediateCategoryClicked(
-                          !ifIntermediateCategoryClicked
-                        );
-                        setIfSeniorCategoryClicked(false);
-                        setIfOtakuCategoryClicked(false);
-                      }}
-                    >
-                      中級者
-                    </Button>
-                  </Col>
-                  <Col lg={{ span: 3, offset: 0 }} xs={{ span: 3, offset: 0 }}>
-                    <Button
-                      className={
-                        ifSeniorCategoryClicked
-                          ? "seniorClicked"
-                          : "notSeniorClicked"
-                      }
-                      onClick={() => {
-                        setIfBeginnerCategoryClicked(false);
-                        setIfIntermediateCategoryClicked(false);
-                        if (ifSeniorCategoryClicked) {
-                          setCategory("");
-                        } else {
-                          setCategory("上級者");
-                        }
-                        setIfSeniorCategoryClicked(!ifSeniorCategoryClicked);
-                        setIfOtakuCategoryClicked(false);
-                      }}
-                    >
-                      上級者
-                    </Button>
-                  </Col>
-                  <Col lg={{ span: 3, offset: 0 }} xs={{ span: 3, offset: 0 }}>
-                    <Button
-                      className={
-                        ifOtakuCategoryClicked
-                          ? "otakuClicked"
-                          : "notOtakuClicked"
-                      }
-                      onClick={() => {
-                        setIfBeginnerCategoryClicked(false);
-                        setIfIntermediateCategoryClicked(false);
-                        setIfSeniorCategoryClicked(false);
-                        if (ifOtakuCategoryClicked) {
-                          setCategory("");
-                        } else {
-                          setCategory("オタク");
-                        }
-                        setIfOtakuCategoryClicked(!ifOtakuCategoryClicked);
-                      }}
-                    >
-                      オタク
-                    </Button>
-                  </Col>
-                </Row>
-              </Col>
-              <Col
-                className="mapPageSearchComponent"
-                lg={{ span: 6, offset: 3 }}
-                xs={{ span: 8, offset: 2 }}
-              >
-                <Button
-                  className="mapPageSearchButton"
-                  onClick={searchingArticles}
-                >
-                  検索！
-                </Button>
-              </Col>
-              <Col
-                className="homePageSearchComponent"
-                lg={{ span: 8, offset: 2 }}
-                xs={{ span: 8, offset: 2 }}
-              >
-                <QueryCount count={articleCount}></QueryCount>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <Row
-          className="mapPagePointCardSectionBackground"
-          style={{ backgroundImage: `url(${backgroundImage})` }}
-        >
-          <Col xl={{ span: 10, offset: 1 }} xs={{ span: 10, offset: 1 }}>
-            <Row>
-              <Col xl={{ span: 10, offset: 1 }} xs={{ span: 12, offset: 0 }}>
-                <Row className="mapPagePointCardSection">
-                  <>
-                    {articles.map((article) => (
-                      <Col
-                        className="mapPagePointCard"
-                        style={{ paddingLeft: 24, paddingRight: 24 }}
-                        xl={{ span: 6, offset: 0 }}
-                        xs={{ span: 12, offset: 0 }}
-                        key={article.id}
-                      >
-                        <PointCard
-                          category={article.category}
-                          character={article.character}
-                          ability={article.ability}
-                          side={article.side}
-                          title={article.title}
-                          thumbnail={article.thumbnail}
-                          videoID={article.videoID}
-                          readTime={article.readTime}
-                          id={article.id}
-                        ></PointCard>
-                      </Col>
-                    ))}
-                  </>
-                </Row>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={{ span: 6, offset: 3 }} xs={{ span: 12, offset: 0 }}>
-            {page == 0 ? (
-              <></>
-            ) : (
               <>
-                <Button
-                  onClick={() => {
-                    loadPastArticles();
-                  }}
-                >
-                  前へ
-                </Button>
+                {page * articleLimit + 1} ~ {(page + 1) * articleLimit}
               </>
-            )}
-            <>
-              {page * articleLimit + 1} ~ {(page + 1) * articleLimit}
-            </>
-            {page == articlePageMaxLimit ? (
-              <></>
-            ) : (
-              <>
-                <Button
-                  onClick={() => {
-                    loadNextArticles();
-                  }}
-                >
-                  次へ
-                </Button>
-              </>
-            )}
-          </Col>
-        </Row>
-      </Container>
+              {page == articlePageMaxLimit ? (
+                <></>
+              ) : (
+                <>
+                  <Button
+                    onClick={() => {
+                      loadNextArticles();
+                    }}
+                  >
+                    次へ
+                  </Button>
+                </>
+              )}
+            </Col>
+          </Row>
+        </Container>
+      )}
     </>
   );
 };
